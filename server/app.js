@@ -4,9 +4,6 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 require('express-async-errors')
 
-const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
-
 var app = express()
 
 // view engine setup
@@ -19,8 +16,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/', require('./routes/index'))
 
 app.listen(3000)
 console.log('MIYAMOTO Server is started!! Port:3000')
