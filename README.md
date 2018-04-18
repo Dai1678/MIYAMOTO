@@ -7,6 +7,8 @@
 まず最初はMacにDockerをインストールしてください。以下のページに説明されているので参考までに。
 [https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81](https://qiita.com/kurkuru/items/127fa99ef5b2f0288b81)
 
+実行する前に```server/config/config.json.sample```をリネームして利用してください。Docker利用の場合は特に
+
 ### 開発環境でのDocker操作
 開発環境の起動
 ```
