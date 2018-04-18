@@ -1,0 +1,27 @@
+version: '2'
+services:
+  node:
+    image: node:8.6-alpine
+    container_name: node
+    hostname: node
+    volumes:
+      - ".:/src"
+    working_dir: /src
+    command: [sh, -c, npm install && npm start]
+    ports:
+      - "3000:3000"
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    hostname: mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=miyamoto_dev"
+      - "MYSQL_ROOT_PASSWORD=miyamoto3"
