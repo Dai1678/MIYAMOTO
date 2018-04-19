@@ -1,7 +1,8 @@
-package com.example.justdoit.miyamoto
+package com.example.justdoit.miyamoto.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.justdoit.miyamoto.R
 
 class MainActivity : AppCompatActivity() {
 
