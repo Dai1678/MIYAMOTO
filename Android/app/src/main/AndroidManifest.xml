@@ -23,6 +23,7 @@
         <activity android:name=".activity.WishListActivity" />
         <activity android:name=".activity.MatchingCompleteActivity" />
         <activity android:name=".activity.PaisluActivity"></activity>
+        <activity android:name=".activity.TabActivity"></activity>
     </application>
 
 </manifest>
