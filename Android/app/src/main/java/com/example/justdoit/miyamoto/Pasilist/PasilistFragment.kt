@@ -1,5 +1,6 @@
 package com.example.justdoit.miyamoto.Pasilist
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -12,6 +13,7 @@ import android.widget.ListView
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.fragment.MainFragment
+import kotlinx.android.synthetic.main.fragment_pasilist.*
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -24,9 +26,18 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     private var maxPasilistSize = 0
 
+    private lateinit var listener: OnPasilistListener
+
     companion object {
         fun newInstance() : PasilistFragment {
             return PasilistFragment()
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is OnPasilistListener){
+            listener = context
         }
     }
 
@@ -38,7 +49,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         mPasilist=view.findViewById<ListView?>(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
-        //TODO Pasilistデータの中身をサーバーからGET
+        //TODO Pasilistデータの中身をサーバーからGET確認
         getPasilistData()
 
         val pasilistModel = PasilistModel()
@@ -51,10 +62,16 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        pasilist.onItemClickListener = this
+    }
+
 
     override fun onItemClick(adapterView: AdapterView<*>?, view: View, position: Int, id: Long) {
-        //TODO 詳細画面へ遷移
-
+        //TODO PasiluActivityへ遷移
+        //listener.intentPasilu()
     }
 
     private fun getPasilistData(){
@@ -103,4 +120,8 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         })
     }
 
-}// Required empty public constructor
+    interface OnPasilistListener {
+        fun intentPasilu()
+    }
+
+}

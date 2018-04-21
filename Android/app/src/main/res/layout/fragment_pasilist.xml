@@ -5,10 +5,8 @@
     android:orientation="horizontal"
     tools:context="com.example.justdoit.miyamoto.Pasilist.PasilistFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ListView
         android:id="@+id/pasilist"
-        android:paddingTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -1,12 +1,15 @@
 package com.example.justdoit.miyamoto.activity
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.justdoit.miyamoto.Pasilist.PasilistFragment
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.ViewPagerAdapter
+import com.example.justdoit.miyamoto.fragment.MyProfileFragment
 import kotlinx.android.synthetic.main.activity_tab.*
 
-class TabActivity : AppCompatActivity() {
+class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener, PasilistFragment.OnPasilistListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,5 +23,15 @@ class TabActivity : AppCompatActivity() {
         pager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(pager)
 
+    }
+
+    override fun intentWish() {
+        val intent = Intent(this, WishListActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun intentPasilu() {
+        val intent = Intent(this, PaisluActivity::class.java)
+        startActivity(intent)
     }
 }
