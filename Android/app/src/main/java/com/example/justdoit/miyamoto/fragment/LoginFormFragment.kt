@@ -29,8 +29,8 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     private lateinit var editUserPass : String
 
     companion object {
-        fun getInstance() : MainFragment {
-            return MainFragment()
+        fun getInstance() : LoginFormActivity {
+            return LoginFormActivity()
         }
     }
 
@@ -91,7 +91,7 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
                         val token = json.getString("token")
                         Log.i("token",token)
                         saveToken("token", token)
-                        val intent=Intent(context,MainActivity::class.java)
+                        val intent=Intent(context,TabActivity::class.java)
                         startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
