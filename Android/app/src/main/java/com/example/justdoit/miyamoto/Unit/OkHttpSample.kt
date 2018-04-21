@@ -1,6 +1,7 @@
 package com.example.justdoit.miyamoto.Unit
 
 import android.content.Context
+import android.util.Log
 import okhttp3.*
 import org.json.JSONException
 import android.widget.Toast
@@ -9,6 +10,7 @@ import org.json.JSONObject
 import okhttp3.OkHttpClient
 import java.io.IOException
 import android.widget.TextView
+import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import okhttp3.FormBody
 import okhttp3.RequestBody
 
@@ -20,6 +22,7 @@ import okhttp3.RequestBody
  */
 class OkHttpSample {
     var url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400040"
+    private lateinit var token : String
 
     //get
     public fun get(context: Context) {
