@@ -20,6 +20,7 @@ app.use(expressValidator())
 
 app.use('/', require('./routes/index'))
 app.use('/auth', require('./routes/auth'))
+app.use('/user', require('./routes/user'))
 
 app.listen(3000)
 console.log('MIYAMOTO Server is started!! Port:3000')
