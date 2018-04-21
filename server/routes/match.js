@@ -13,7 +13,7 @@ router.post('/request', authFilter, async (req, res, next) => {
 
   const shoppingLists = req.body.shoppingLists
   const user = await models.User.findOne({ where: { accessToken: req.body.token } })
-  const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id, status:  } })
+  const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id, status: models.PasiRequest.WAIT_FOR_PASILIST } })
   if (pasiRequest) return next({ error: 'request already exists' })
   
   await models.sequelize.transaction(async t => {
@@ -65,6 +65,24 @@ router.get('/pasiList', async (req, res, next) => {
   res.json({ ok: 1, result: pasiRequests })
 })
 
-router.get('check')
+router.get('/checkFlag', authFilter, async (req, res, next) => {
+  const user = await models.User.findOne({ where: { accessToken: req.query.token } })
+  const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id, status: models.PasiRequest.INPROGRESS } })
+  res.json({ ok: 1, isMatched: !!pasiRequest })
+})
+
+router.post('/acceptRequest', authFilter, async (req, res, next) => {
+  req.checkBody('pasiRequestId', 'pasiRequestId is required')
+
+  const errors = req.validationErrors()
+  if (errors) return next(errors)
+
+  await models.PasiRequest.update({
+    status: models.PasiRequest.INPROGRESS
+  }, {
+    where: { id: ~~req.body.pasiRequestId }
+  })
+  res.json({ ok: 1 })
+})
 
 module.exports = router
