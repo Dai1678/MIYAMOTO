@@ -35,4 +35,9 @@ class MainActivity : AppCompatActivity() {
         val intent=Intent(this,PasilistActivity::class.java)
         startActivity(intent)
     }
+
+    fun intentWishlist(v:View){
+        val intent=Intent(this,WishListActivity::class.java)
+        startActivity(intent)
+    }
 }
