@@ -39,6 +39,12 @@ class WishListAdapter(context: Context,resource:Int) :ArrayAdapter<WishListModel
         mItems.set(pos,item)
     }
 
+    fun reload() {
+        clear()
+        addAll(mItems)
+        notifyDataSetChanged()
+    }
+
     override fun add(item: WishListModel){
         mItems.add(item)
     }

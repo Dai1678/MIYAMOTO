@@ -3,6 +3,7 @@ package com.example.justdoit.miyamoto.Unit
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
 import java.util.*
@@ -37,14 +38,14 @@ class MatchingTimerTask(context: Context,val token:String,val timer:Timer) : Tim
             val client = OkHttpClient()
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-
+                    Log.d("aa","失敗")
                 }
 
                 @Throws(IOException::class)
                 override fun
                         onResponse(call: Call, response: Response) {
                     val res = response.body()?.string()
-                    (context as MainActivity).runOnUiThread{
+                    (context as AppCompatActivity).runOnUiThread{
                         val json: JSONObject
                         try {
                             json = JSONObject(res)
