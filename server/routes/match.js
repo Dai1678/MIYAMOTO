@@ -13,7 +13,7 @@ router.post('/request', authFilter, async (req, res, next) => {
 
   const shoppingLists = req.body.shoppingLists
   const user = await models.User.findOne({ where: { accessToken: req.body.token } })
-  const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id } })
+  const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id, status:  } })
   if (pasiRequest) return next({ error: 'request already exists' })
   
   await models.sequelize.transaction(async t => {
@@ -62,7 +62,9 @@ router.get('/pasiList', async (req, res, next) => {
   pasiRequests.forEach(request => {
     request.shoppingListId = shoppingLists.find(list => list.pasiRequestId === request.id)
   })
-  res.json(Object.assign({ ok: 1 }, pasiRequests))
+  res.json({ ok: 1, result: pasiRequests })
 })
+
+router.get('check')
 
 module.exports = router
