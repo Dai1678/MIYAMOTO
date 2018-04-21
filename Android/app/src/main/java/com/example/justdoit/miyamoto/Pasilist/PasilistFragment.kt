@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
         //TODO Pasilistデータの中身をサーバーからGET
 
+
         for(i in 0..20){
             val sample=PasilistModel(userId, address, timeLimit, totalAmount)
             mPasilistAdapter?.add(sample)
@@ -59,9 +61,9 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     }
 
-    private fun getPasilistData(){
+    private fun getPasilistData(maxListSize : Int){
         val request = Request.Builder()
-                .url("localhost:3000")     // 130010->東京
+                .url("http://140.82.9.44:3000/match/pasilist")     // 130010->東京
                 .get()
                 .build()
 
@@ -79,14 +81,12 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
-                        userId = json.getInt("")
-                        timeLimit = json.getString("Timelimit")
-                        address = json.getString("address")
-                        val shoppingList = json.getJSONArray("ShoppingList")
 
-                        //TODO forでshoppingList回す
+                        val array = json.getJSONArray("result") as Array<JSONObject>
+                        array.forEach {
+                            Log.i("result", it.getString("timeLimit"))
+                        }
 
-                        totalAmount = json.getInt("totalAmount")
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
