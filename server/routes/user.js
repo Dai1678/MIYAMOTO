@@ -9,10 +9,7 @@ router.get('/:userId', authFilter, async (req, res, next) => {
   const errors = req.validationErrors()
   if (errors) return next(errors)
 
-  const user = models.User.findOne({
-    where: { id: req.param.userId },
-    attributes: ['name']
-  })
+  const user = models.User.findById(req.param.userId, { attributes: ['name'] })
 
   if (!user) return next({error: 'not found'})
   res.json({ ok: 1, user })
@@ -24,7 +21,7 @@ router.post('/:userId/pasilistReview/create', authFilter, async (req, res, next)
   if (errors) return next(errors)
 
   await models.PasilistReview.create({
-    userId: req.param.userId,
+    userId: req.params.userId,
     speed: ~~req.body.speed,
     quality: ~~req.body.quality,
     humanNature: ~~req.body.humanNature
@@ -39,7 +36,7 @@ router.get('/:userId/pasilistReview/avarage', authFilter, async (req, res, next)
   if (errors) return next(errors)
 
   const reviewAvg = await models.PasilistReview.findOne({
-    where: { userId: req.param.userId },
+    where: { userId: req.params.userId },
     attributes: [
       'name',
       [models.sequelize.fn('avg', models.sequelize.col('speed')), 'avgSpeed'],

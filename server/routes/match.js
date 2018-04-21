@@ -85,4 +85,13 @@ router.post('/acceptRequest', authFilter, async (req, res, next) => {
   res.json({ ok: 1 })
 })
 
+router.get('/shoppingList/:id', authFilter, async (req, res, next) => {
+  req.checkParams('id', 'id is required')
+  const errors = req.validationErrors()
+  if (errors) return next(errors)
+
+  const result = models.ShoppingList.findById(req.params.id)
+  res.json(Object.assign({ ok: 1 }, result))
+})
+
 module.exports = router
