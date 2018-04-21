@@ -21,13 +21,8 @@ app.use(expressValidator())
 app.use('/', require('./routes/index'))
 app.use('/auth', require('./routes/auth'))
 
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(3000)
-  console.log('MIYAMOTO Server is started!! Port:3000')
-} else {
-  app.listen(80)
-  console.log('MIYAMOTO Server is started!! Port:80')
-}
+app.listen(3000)
+console.log('MIYAMOTO Server is started!! Port:3000')
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
