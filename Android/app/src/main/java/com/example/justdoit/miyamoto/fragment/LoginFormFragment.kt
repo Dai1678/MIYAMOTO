@@ -1,6 +1,7 @@
 package com.example.justdoit.miyamoto.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -9,10 +10,13 @@ import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import com.example.justdoit.miyamoto.Pasilist.PasilistAdapter
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import com.example.justdoit.miyamoto.activity.LoginFormActivity
+import com.example.justdoit.miyamoto.activity.MainActivity
 import kotlinx.android.synthetic.main.fragment_login_form.*
 import okhttp3.*
 import org.json.JSONException
@@ -45,6 +49,10 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
+
+        //todo
+        val intent=Intent(context,MainActivity::class.java)
+        startActivity(intent)
 
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
@@ -83,6 +91,8 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
                         val token = json.getString("token")
                         Log.i("token",token)
                         saveToken("token", token)
+                        val intent=Intent(context,MainActivity::class.java)
+                        startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -92,7 +102,7 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     }
 
     private fun saveToken(key: String, strToken: String){
-        val sharedPreferences = this.activity!!.getPreferences(Context.MODE_PRIVATE)
+        val sharedPreferences = this.activity!!.getSharedPreferences("Setting",Context.MODE_PRIVATE)
         val shardPrefEditor = sharedPreferences.edit()
 
         shardPrefEditor.putString(key, strToken)
