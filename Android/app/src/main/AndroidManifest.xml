@@ -11,16 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity.MainActivity"></activity>
-        <activity android:name=".activity.LoginFormActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.LoginFormActivity" />
         <activity android:name=".Pasilist.PasilistActivity" />
-        <activity android:name=".activity.WishListActivity"></activity>
+        <activity android:name=".activity.WishListActivity" />
+        <activity android:name=".activity.TabActivity"></activity>
     </application>
 
 </manifest>

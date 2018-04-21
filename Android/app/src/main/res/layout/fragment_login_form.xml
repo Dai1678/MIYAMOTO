@@ -12,14 +12,16 @@
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="mail"/>
+        android:hint="mail"
+        android:text="kugateruhisa@gmail.com"/>
 
     <EditText
         android:id="@+id/userPass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="pass" />
+        android:hint="pass"
+        android:text="miyamoto"/>
 
     <Button
         android:id="@+id/loginButton"

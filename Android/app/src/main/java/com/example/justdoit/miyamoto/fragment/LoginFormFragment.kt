@@ -17,6 +17,7 @@ import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.TabActivity
 import kotlinx.android.synthetic.main.fragment_login_form.*
 import okhttp3.*
 import org.json.JSONException
@@ -29,8 +30,8 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     private lateinit var editUserPass : String
 
     companion object {
-        fun getInstance() : MainFragment {
-            return MainFragment()
+        fun getInstance() : LoginFormActivity {
+            return LoginFormActivity()
         }
     }
 
@@ -49,10 +50,6 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
-
-        //todo
-        val intent=Intent(context,MainActivity::class.java)
-        startActivity(intent)
 
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
@@ -91,7 +88,7 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
                         val token = json.getString("token")
                         Log.i("token",token)
                         saveToken("token", token)
-                        val intent=Intent(context,MainActivity::class.java)
+                        val intent=Intent(context,TabActivity::class.java)
                         startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
