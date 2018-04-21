@@ -1,7 +1,5 @@
 package com.example.justdoit.miyamoto.fragment
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -12,7 +10,6 @@ import android.view.ViewGroup
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import kotlinx.android.synthetic.main.fragment_login_form.*
-import okhttp3.OkHttpClient
 
 class LoginFormFragment : Fragment(), View.OnClickListener {
 
@@ -38,29 +35,24 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        val strUserName = userName.text.toString()
+        val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
 
-        if (strUserName == "" || strUserPass == ""){
-            runLogin(view,false)
+        if (strUserAddress != "" || strUserPass != ""){
+            runLogin(strUserAddress, strUserPass)
         }else{
-            runLogin(view,true)
+            failureLogin(view)
         }
     }
 
-    private fun runLogin(view: View, result : Boolean){
-        when(result){
-            true -> {
-                //認証作業
-                val httpClient = OkHttpSample()
-                httpClient.post(context!!)
+    private fun runLogin(address: String, pass: String){
+        //認証作業
+        val httpClient = OkHttpSample()
+        httpClient.postLoginData(context!!, address, pass)
+    }
 
-            }
-
-            false -> {
-                Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
-                        .setAction("Action",null).show()
-            }
-        }
+    private fun failureLogin(view: View){
+        Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
+                .setAction("Action",null).show()
     }
 }

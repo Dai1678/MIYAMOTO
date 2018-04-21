@@ -1,6 +1,7 @@
 package com.example.justdoit.miyamoto.Unit
 
 import android.content.Context
+import android.util.Log
 import okhttp3.*
 import org.json.JSONException
 import android.widget.Toast
@@ -9,6 +10,7 @@ import org.json.JSONObject
 import okhttp3.OkHttpClient
 import java.io.IOException
 import android.widget.TextView
+import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import okhttp3.FormBody
 import okhttp3.RequestBody
 
@@ -97,25 +99,25 @@ class OkHttpSample {
                 .build()
 
         val request = Request.Builder()
-                .url(url)       // HTTPアクセス POST送信 テスト確認用ページ
+                .url("http://140.82.9.44:3000/auth/login")       // HTTPアクセス POST送信 テスト確認用ページ
                 .post(formBody)
                 .build()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-
+                //TODO 失敗処理書く！
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val res = response.body()?.string()
-                (context as MainActivity).runOnUiThread{
+                (context as LoginFormActivity).runOnUiThread{
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
                         token = json.getString("token")
-
+                        Log.i("token",token)    //TODO SharedPreferenceでToken保存
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
