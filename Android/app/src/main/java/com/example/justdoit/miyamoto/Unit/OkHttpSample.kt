@@ -21,7 +21,7 @@ import okhttp3.RequestBody
  * Created by taiga on 2018/04/21.
  */
 class OkHttpSample {
-    var url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400040"
+    var url = "http://140.82.9.44:3000"
     private lateinit var token : String
 
     //get
@@ -45,7 +45,7 @@ class OkHttpSample {
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
-                        val massage = json.getString("pinpointLocations")
+                        val massage = json.getString("message")
                         Toast.makeText(context,massage,Toast.LENGTH_LONG).show()
                     } catch (e: JSONException) {
                         e.printStackTrace()
