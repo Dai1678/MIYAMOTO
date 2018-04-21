@@ -20,6 +20,7 @@ import okhttp3.RequestBody
  */
 class OkHttpSample {
     var url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400040"
+    private lateinit var token : String
 
     //get
     public fun get(context: Context) {
@@ -87,4 +88,41 @@ class OkHttpSample {
             }
         })
     }
+
+    fun postLoginData(context: Context, email: String, pass: String){
+        // todo ここでpostするデータ付与して
+        val formBody = FormBody.Builder()
+                .add("email", email)
+                .add("password", pass)
+                .build()
+
+        val request = Request.Builder()
+                .url(url)       // HTTPアクセス POST送信 テスト確認用ページ
+                .post(formBody)
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val res = response.body()?.string()
+                (context as MainActivity).runOnUiThread{
+                    val json: JSONObject
+                    try {
+                        json = JSONObject(res)
+                        token = json.getString("token")
+
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        })
+    }
+
+
 }

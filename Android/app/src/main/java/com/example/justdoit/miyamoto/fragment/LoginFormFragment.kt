@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import kotlinx.android.synthetic.main.fragment_login_form.*
+import okhttp3.OkHttpClient
 
 class LoginFormFragment : Fragment(), View.OnClickListener {
 
@@ -50,6 +52,8 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
         when(result){
             true -> {
                 //認証作業
+                val httpClient = OkHttpSample()
+                httpClient.post(context!!)
 
             }
 
