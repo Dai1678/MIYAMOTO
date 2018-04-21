@@ -17,6 +17,7 @@ import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.TabActivity
 import kotlinx.android.synthetic.main.fragment_login_form.*
 import okhttp3.*
 import org.json.JSONException
@@ -91,7 +92,7 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
                         val token = json.getString("token")
                         Log.i("token",token)
                         saveToken("token", token)
-                        val intent=Intent(context,TabActivity::class.java)
+                        val intent=Intent(context, TabActivity::class.java)
                         startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
