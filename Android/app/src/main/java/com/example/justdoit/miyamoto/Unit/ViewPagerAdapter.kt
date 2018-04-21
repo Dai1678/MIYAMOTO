@@ -12,5 +12,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //1 -> まだ！
+        //2 -> PasilistFragmnet
     }
 }
