@@ -7,22 +7,27 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.Toast
 
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.activity.MainActivity
+import okhttp3.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [PasilistFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [PasilistFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PasilistFragment : Fragment() {
+class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     var mPasilistAdapter:PasilistAdapter?=null
     var mPasilist:ListView?=null
+
+    private var userId : Int = 0
+    private lateinit var timeLimit : String
+    private lateinit var address : String
+
+    private var totalAmount : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +42,58 @@ class PasilistFragment : Fragment() {
         mPasilist=view.findViewById(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
+        //TODO Pasilistデータの中身をサーバーからGET
+
         for(i in 0..20){
-            val sample=PasilistModel(0,"東京駅","午後2時まで",3000)
+            val sample=PasilistModel(userId, address, timeLimit, totalAmount)
             mPasilistAdapter?.add(sample)
         }
         mPasilist?.adapter=mPasilistAdapter
 
         return view
+    }
+
+
+    override fun onItemClick(adapterView: AdapterView<*>?, view: View, position: Int, id: Long) {
+        //TODO 詳細画面へ遷移
+
+    }
+
+    private fun getPasilistData(){
+        val request = Request.Builder()
+                .url("localhost:3000")     // 130010->東京
+                .get()
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+            }
+
+            @Throws(IOException::class)
+            override fun
+                    onResponse(call: Call, response: Response) {
+                val res = response.body()?.string()
+                (context as MainActivity).runOnUiThread{
+                    val json: JSONObject
+                    try {
+                        json = JSONObject(res)
+                        userId = json.getInt("")
+                        timeLimit = json.getString("Timelimit")
+                        address = json.getString("address")
+                        val shoppingList = json.getJSONArray("ShoppingList")
+
+                        //TODO forでshoppingList回す
+
+                        totalAmount = json.getInt("totalAmount")
+
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        })
     }
 
 }// Required empty public constructor
