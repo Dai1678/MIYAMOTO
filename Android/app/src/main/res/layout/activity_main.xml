@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.example.justdoit.miyamoto.activity.MainActivity">
 
-    <fragment
-        android:id="@+id/main_fragment"
-        class="com.example.justdoit.miyamoto.fragment.MainFragment"
+    <LinearLayout
+        android:id="@+id/container_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
 </android.support.constraint.ConstraintLayout>
