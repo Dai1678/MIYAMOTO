@@ -1,18 +1,23 @@
 package com.example.justdoit.miyamoto.fragment
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.util.Log
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
+import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import kotlinx.android.synthetic.main.fragment_login_form.*
-import okhttp3.OkHttpClient
+import okhttp3.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
 class LoginFormFragment : Fragment(), View.OnClickListener {
 
@@ -38,29 +43,61 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        val strUserName = userName.text.toString()
+        val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
 
-        if (strUserName == "" || strUserPass == ""){
-            runLogin(view,false)
+        if (strUserAddress != "" || strUserPass != ""){
+            //認証作業
+            postLoginData(strUserAddress, strUserPass)
         }else{
-            runLogin(view,true)
+            Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
+                    .setAction("Action",null).show()
         }
     }
 
-    private fun runLogin(view: View, result : Boolean){
-        when(result){
-            true -> {
-                //認証作業
-                val httpClient = OkHttpSample()
-                httpClient.post(context!!)
+    private fun postLoginData(email: String, pass: String){
+        //Login認証データ
+        val formBody = FormBody.Builder()
+                .add("email", email)
+                .add("password", pass)
+                .build()
 
+        val request = Request.Builder()
+                .url("http://140.82.9.44:3000/auth/login")       // HTTPアクセス POST送信 テスト確認用ページ
+                .post(formBody)
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
             }
 
-            false -> {
-                Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
-                        .setAction("Action",null).show()
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val res = response.body()?.string()
+                (context as LoginFormActivity).runOnUiThread{
+                    val json: JSONObject
+                    try {
+                        json = JSONObject(res)
+                        val token = json.getString("token")
+                        Log.i("token",token)
+                        saveToken("token", token)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
             }
-        }
+        })
     }
+
+    private fun saveToken(key: String, strToken: String){
+        val sharedPreferences = this.activity!!.getPreferences(Context.MODE_PRIVATE)
+        val shardPrefEditor = sharedPreferences.edit()
+
+        shardPrefEditor.putString(key, strToken)
+        shardPrefEditor.apply()
+        Log.i("token","保存完了！")
+    }
+
 }
