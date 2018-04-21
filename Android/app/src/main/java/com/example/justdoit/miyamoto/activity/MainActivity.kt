@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun intentPasilist(v: View){
-        val intent=Intent(this,PasilistActivity::class.java)
+    fun intentLogin(v: View){
+        val intent=Intent(this,LoginFormActivity::class.java)
         startActivity(intent)
     }
 

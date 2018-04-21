@@ -10,6 +10,8 @@ import android.widget.AdapterView
 import android.widget.ListView
 
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.activity.TabActivity
+import com.example.justdoit.miyamoto.fragment.MainFragment
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -22,9 +24,10 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     private var maxPasilistSize = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    companion object {
+        fun newInstance() : PasilistFragment {
+            return PasilistFragment()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +74,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
             override fun
                     onResponse(call: Call, response: Response) {
                 val res = response.body()?.string()
-                (context as PasilistActivity).runOnUiThread{
+                (context as TabActivity).runOnUiThread{
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
