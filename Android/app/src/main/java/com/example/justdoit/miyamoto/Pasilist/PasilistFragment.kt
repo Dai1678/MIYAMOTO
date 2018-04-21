@@ -1,7 +1,5 @@
 package com.example.justdoit.miyamoto.Pasilist
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -10,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
-import android.widget.Toast
 
 import com.example.justdoit.miyamoto.R
-import com.example.justdoit.miyamoto.activity.MainActivity
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -24,11 +20,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
     var mPasilistAdapter:PasilistAdapter?=null
     var mPasilist:ListView?=null
 
-    private var userId : Int = 0
-    private lateinit var timeLimit : String
-    private lateinit var address : String
-
-    private var totalAmount : Int = 0
+    private var maxPasilistSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +32,15 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         // Inflate the layout for this fragment
         val view=inflater.inflate(R.layout.fragment_pasilist, container, false)
 
-        mPasilist=view.findViewById(R.id.pasilist)
+        mPasilist=view.findViewById<ListView?>(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
         //TODO Pasilistデータの中身をサーバーからGET
+        getPasilistData()
 
-
-        for(i in 0..20){
-            val sample=PasilistModel(userId, address, timeLimit, totalAmount)
+        val pasilistModel = PasilistModel()
+        for(i in 0..maxPasilistSize){
+            val sample=PasilistModel(pasilistModel.userId,  pasilistModel.location, pasilistModel.timeLimit, pasilistModel.amount)
             mPasilistAdapter?.add(sample)
         }
         mPasilist?.adapter=mPasilistAdapter
@@ -61,30 +54,41 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     }
 
-    private fun getPasilistData(maxListSize : Int){
+    private fun getPasilistData(){
         val request = Request.Builder()
-                .url("http://140.82.9.44:3000/match/pasilist")     // 130010->東京
+                .url("http://140.82.9.44:3000/match/pasilist")
                 .get()
                 .build()
 
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-
+                e.printStackTrace()
+                Log.i("error","error")
             }
 
             @Throws(IOException::class)
             override fun
                     onResponse(call: Call, response: Response) {
                 val res = response.body()?.string()
-                (context as MainActivity).runOnUiThread{
+                (context as PasilistActivity).runOnUiThread{
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
 
-                        val array = json.getJSONArray("result") as Array<JSONObject>
-                        array.forEach {
-                            Log.i("result", it.getString("timeLimit"))
+                        val resultArray=json.getJSONArray("result")
+                        maxPasilistSize = resultArray.length()
+
+                        resultArray?.let{
+                            for(i in 0..resultArray.length()) {
+                                val resultJson=resultArray[i] as JSONObject
+                                val pasilistModel = PasilistModel()
+                                pasilistModel.userId =resultJson.getInt("userid")
+                                pasilistModel.amount = resultJson.getInt("totalAmount")
+                                pasilistModel.location = resultJson.getString("address")
+                                pasilistModel.timeLimit = resultJson.getString("timeLimit")
+                                Log.i("id",resultJson.getInt("userid").toString())
+                            }
                         }
 
 
