@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
+const expressValidator = require('express-validator')
 require('express-async-errors')
 
 var app = express()
@@ -15,8 +16,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(expressValidator())
 
 app.use('/', require('./routes/index'))
+app.use('/auth', require('./routes/auth'))
 
 app.listen(3000)
 console.log('MIYAMOTO Server is started!! Port:3000')
