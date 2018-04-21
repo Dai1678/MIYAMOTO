@@ -51,8 +51,8 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
         val strUserPass = userPass.text.toString()
 
         //todo
-        val intent=Intent(context,MainActivity::class.java)
-        startActivity(intent)
+//        val intent=Intent(context,MainActivity::class.java)
+//        startActivity(intent)
 
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業

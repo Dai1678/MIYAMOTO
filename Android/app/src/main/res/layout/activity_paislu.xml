@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.justdoit.miyamoto.activity.WishListActivity">
+    tools:context="com.example.justdoit.miyamoto.activity.PaisluActivity">
 
     <LinearLayout
-        android:id="@+id/container_wishlist"
+        android:id="@+id/container_pasilu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
