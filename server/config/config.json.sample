@@ -15,7 +15,7 @@
   },
   "production": {
     "username": "root",
-    "password": miyamoto3,
+    "password": "miyamoto3",
     "database": "miyamoto",
     "host": "127.0.0.1",
     "dialect": "mysql"
