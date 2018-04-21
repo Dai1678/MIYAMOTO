@@ -51,6 +51,10 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
         val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
 
+        //todo
+//        val intent=Intent(context,MainActivity::class.java)
+//        startActivity(intent)
+
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
             postLoginData(strUserAddress, strUserPass)
@@ -88,7 +92,7 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
                         val token = json.getString("token")
                         Log.i("token",token)
                         saveToken("token", token)
-                        val intent=Intent(context,TabActivity::class.java)
+                        val intent=Intent(context, TabActivity::class.java)
                         startActivity(intent)
                     } catch (e: JSONException) {
                         e.printStackTrace()
