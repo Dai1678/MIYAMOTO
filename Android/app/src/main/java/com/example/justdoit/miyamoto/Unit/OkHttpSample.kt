@@ -22,7 +22,6 @@ import okhttp3.RequestBody
  */
 class OkHttpSample {
     var url = "http://140.82.9.44:3000"
-    var url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=400040"
     private lateinit var token : String
 
     //get
