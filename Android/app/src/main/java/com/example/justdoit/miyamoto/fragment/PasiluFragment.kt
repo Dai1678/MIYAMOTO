@@ -118,8 +118,8 @@ class PasiluFragment : Fragment() {
                         val result = json.getJSONArray("result")?.let {
                             val maxCount = it.length()
                             val result: Array<WishListModel?> = arrayOfNulls(maxCount)
-                            for (i in 0..maxCount) {
-                                val obj = JSONObject(it[i].toString())
+                            for (i in 0 until maxCount) {
+                                val obj = it[i] as JSONObject
                                 result[i] = WishListModel(obj.getString("title"), obj.getInt("count"))
                             }
                             return@let result
