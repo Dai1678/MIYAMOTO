@@ -1,4 +1,4 @@
-package com.example.justdoit.miyamoto.Model
+package com.example.justdoit.miyamoto.model
 
 /**
  * Created by taiga on 2018/04/22.

@@ -1,7 +1,5 @@
 package com.example.justdoit.miyamoto.fragment
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -14,12 +12,10 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
-import com.example.justdoit.miyamoto.Model.WishListModel
+import com.example.justdoit.miyamoto.model.WishListModel
 
 import com.example.justdoit.miyamoto.R
-import com.example.justdoit.miyamoto.activity.MainActivity
 import com.example.justdoit.miyamoto.activity.PaisluActivity
-import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.adapter.WishListAdapter
 import okhttp3.*
 import org.json.JSONException

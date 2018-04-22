@@ -10,12 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.example.justdoit.miyamoto.Model.WishListModel
-import com.example.justdoit.miyamoto.Pasilist.PasilistAdapter
-import com.example.justdoit.miyamoto.Pasilist.PasilistModel
+import com.example.justdoit.miyamoto.model.WishListModel
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.MatchingTimerTask
-import com.example.justdoit.miyamoto.activity.MainActivity
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.activity.WishListActivity
 import com.example.justdoit.miyamoto.adapter.WishListAdapter

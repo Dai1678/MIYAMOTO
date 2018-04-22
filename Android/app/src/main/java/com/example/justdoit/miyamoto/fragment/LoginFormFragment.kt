@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import com.example.justdoit.miyamoto.ApiClient
 import com.example.justdoit.miyamoto.Pasilist.PasilistAdapter
 
 import com.example.justdoit.miyamoto.R
@@ -19,6 +20,8 @@ import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import com.example.justdoit.miyamoto.activity.MainActivity
 import com.example.justdoit.miyamoto.activity.TabActivity
 import kotlinx.android.synthetic.main.fragment_login_form.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,64 +54,17 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
         val strUserAddress = userName.text.toString()
         val strUserPass = userPass.text.toString()
 
-        //todo
-//        val intent=Intent(context,MainActivity::class.java)
-//        startActivity(intent)
-
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
-            postLoginData(strUserAddress, strUserPass)
+            launch(UI) {
+                ApiClient.shared.login(strUserAddress, strUserPass).await()
+            }
+            val intent = Intent(context, TabActivity::class.java)
+            startActivity(intent)
         }else{
             Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
                     .setAction("Action",null).show()
         }
-    }
-
-    private fun postLoginData(email: String, pass: String){
-        //Login認証データ
-        val formBody = FormBody.Builder()
-                .add("email", email)
-                .add("password", pass)
-                .build()
-
-        val request = Request.Builder()
-                .url("http://140.82.9.44:3000/auth/login")       // HTTPアクセス POST送信 テスト確認用ページ
-                .post(formBody)
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val res = response.body()?.string()
-                (context as LoginFormActivity).runOnUiThread{
-                    val json: JSONObject
-                    try {
-                        json = JSONObject(res)
-                        val token = json.getString("token")
-                        Log.i("token",token)
-                        saveToken("token", token)
-                        val intent=Intent(context, TabActivity::class.java)
-                        startActivity(intent)
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        })
-    }
-
-    private fun saveToken(key: String, strToken: String){
-        val sharedPreferences = this.activity!!.getSharedPreferences("Setting",Context.MODE_PRIVATE)
-        val shardPrefEditor = sharedPreferences.edit()
-
-        shardPrefEditor.putString(key, strToken)
-        shardPrefEditor.apply()
-        Log.i("token","保存完了！")
     }
 
 }
