@@ -93,7 +93,7 @@ router.get('/shoppingList/:id', authFilter, async (req, res, next) => {
   const errors = req.validationErrors()
   if (errors) return next(errors)
 
-  const result = models.ShoppingList.findById(req.params.id)
+  const result = await models.ShoppingList.findById(req.params.id)
   res.json({ ok: 1, result })
 })
 
