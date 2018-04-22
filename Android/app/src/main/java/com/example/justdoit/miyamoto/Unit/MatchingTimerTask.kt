@@ -57,6 +57,11 @@ class MatchingTimerTask(context: Context,val token:String,val timer:Timer) : Tim
                                 val sharedPreferences = context?.getSharedPreferences("Setting", Context.MODE_PRIVATE)
                                 val shardPrefEditor = sharedPreferences?.edit()
                                 shardPrefEditor?.putBoolean("mode", false)
+                                shardPrefEditor?.putBoolean("notComplete", true)
+                                shardPrefEditor?.apply()
+
+                                val pasiRequestId = json.getString("pasiRequestId")
+                                shardPrefEditor?.putString("pasiRequestId", pasiRequestId)
                                 shardPrefEditor?.apply()
 
                                 //マッチング完了画面へ遷移

@@ -17,7 +17,7 @@ class WishListAdapter(context: Context,resource:Int) :ArrayAdapter<WishListModel
     private var mItems: ArrayList<WishListModel>
     private var mInflater: LayoutInflater
 
-    var titleV:EditText?=null
+    var titleV:TextView?=null
     var cntV:EditText?=null
     var delBtn:Button?=null
     var reloadBtn:Button?=null
@@ -69,7 +69,7 @@ class WishListAdapter(context: Context,resource:Int) :ArrayAdapter<WishListModel
         } else {
             view = mInflater.inflate(mResource, null)
 
-            titleV=view.findViewById<EditText>(R.id.edit_title)
+            titleV=view.findViewById<TextView>(R.id.edit_title)
             cntV=view.findViewById<EditText>(R.id.edit_count)
             delBtn=view.findViewById<Button>(R.id.delete_btn)
             reloadBtn=view.findViewById<Button>(R.id.reload_btn)
