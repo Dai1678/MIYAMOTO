@@ -57,6 +57,9 @@ class PasilistAdapter(context: Context,resource: Int) :ArrayAdapter<PasilistMode
         val amountT=view.findViewById<TextView>(R.id.amount_pasilist)
         amountT.text=item.amount.toString()
 
+        val idT=view.findViewById<TextView>(R.id.text_id)
+        idT.text=item.userId.toString()
+
 
         return view
     }

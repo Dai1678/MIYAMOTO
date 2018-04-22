@@ -50,6 +50,7 @@ class MatchingTimerTask(context: Context,val token:String,val timer:Timer) : Tim
                         try {
                             json = JSONObject(res)
                             val isMatched = json.getBoolean("isMatched")
+                            Log.d("MATCH",isMatched.toString())
                             if(isMatched) {
 
                                 timer.cancel()
