@@ -99,4 +99,18 @@ router.get('/shoppingList/:id', authFilter, async (req, res, next) => {
   res.json({ ok: 1, result })
 })
 
+router.post('/received', authFilter, async (req, res, next) => {
+  req.checkBody('pasiRequestId', 'pasiRequestId is required')
+
+  const errors = req.validationErrors()
+  if (errors) return next(errors)
+
+  await models.PasiRequest.update({
+    status: models.PasiRequest.FINISH
+  }, {
+    where: { id: ~~req.body.pasiRequestId }
+  })
+  res.json({ ok: 1 })
+})
+
 module.exports = router
