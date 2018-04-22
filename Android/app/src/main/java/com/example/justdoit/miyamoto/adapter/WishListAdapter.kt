@@ -45,6 +45,10 @@ class WishListAdapter(context: Context,resource:Int) :ArrayAdapter<WishListModel
         notifyDataSetChanged()
     }
 
+    override fun clear(){
+        mItems.clear()
+    }
+
     override fun add(item: WishListModel){
         mItems.add(item)
     }
@@ -71,14 +75,14 @@ class WishListAdapter(context: Context,resource:Int) :ArrayAdapter<WishListModel
 
             titleV=view.findViewById<TextView>(R.id.edit_title)
             cntV=view.findViewById<EditText>(R.id.edit_count)
-            delBtn=view.findViewById<Button>(R.id.delete_btn)
-            reloadBtn=view.findViewById<Button>(R.id.reload_btn)
+            //delBtn=view.findViewById<Button>(R.id.delete_btn)
+            //reloadBtn=view.findViewById<Button>(R.id.reload_btn)
 
             mainC=view.findViewById<LinearLayout>(R.id.container_main)
             addC=view.findViewById<TextView>(R.id.container_add)
         }
 
-        titleV?.setText(item.title)
+        titleV?.text = item.title
         cntV?.setText(item.count.toString())
         delBtn?.setOnClickListener {
             //mItems.remove(item)

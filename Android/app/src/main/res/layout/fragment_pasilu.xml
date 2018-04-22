@@ -129,4 +129,37 @@
 
     </android.support.v7.widget.CardView>
 
+    <LinearLayout
+        android:id="@+id/container_ok"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TextView
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#cc000000"
+        android:text="パシってきてください"
+        android:textColor="#ffffff"
+        android:gravity="center|bottom"
+        android:textStyle="bold"
+        android:textSize="30dp"/>
+
+        <TextView
+            android:id="@+id/text_ok"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#cc000000"
+            android:text="OK"
+            android:textColor="#ffffff"
+            android:gravity="center|top"
+            android:textSize="25dp"/>
+
+
+    </LinearLayout>
+
 </FrameLayout>
