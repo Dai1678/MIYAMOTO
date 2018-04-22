@@ -88,6 +88,8 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
         intent.putExtra("token",token)
         val id=mPasilistAdapter?.getItem(position)?.userId
         intent.putExtra("id",id)
+        val shoppingListId = mPasilistAdapter?.getItem(position)?.shoppingListId
+        intent.putExtra("shoppingListId", shoppingListId)
         startActivity(intent)
     }
 
@@ -134,9 +136,10 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
                                 val amount = resultJson.getInt("totalAmount")
                                 val location = resultJson.getString("address")
                                 val timeLimit = resultJson.getString("timeLimit")
+                                val shoppingListId = resultJson.getInt("shoppingListId")
                                 Log.i("id",resultJson.getInt("userId").toString())
 
-                                val sample=PasilistModel(userId, location, timeLimit, amount)
+                                val sample=PasilistModel(userId, location, timeLimit, amount, shoppingListId)
                                 mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
                                 mPasilistAdapter?.add(sample)
                                 mPasilistAdapter?.notifyDataSetChanged()

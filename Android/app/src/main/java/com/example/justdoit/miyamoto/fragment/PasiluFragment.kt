@@ -34,6 +34,7 @@ class PasiluFragment : Fragment() {
 
     var token=""
     var userId=0
+    var shoppingListId = 0
     var mWishlistAdapter: WishListAdapter? = null
     var mWishlist: ListView? = null
 
@@ -50,8 +51,10 @@ class PasiluFragment : Fragment() {
 
         token=arguments!!.getString("token")
         userId=arguments!!.getInt("id")
+        shoppingListId = arguments!!.getInt("shoppingListId")
 
         val pasiluBtn = view.findViewById<Button>(R.id.pasilu)
+        fetchShoppingList(shoppingListId)
 
         pasiluBtn.setOnClickListener {
 
