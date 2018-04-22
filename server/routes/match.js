@@ -71,7 +71,11 @@ router.get('/pasiList', async (req, res, next) => {
 router.get('/checkFlag', authFilter, async (req, res, next) => {
   const user = await models.User.findOne({ where: { accessToken: req.query.token } })
   const pasiRequest = await models.PasiRequest.findOne({ where: { userId: user.id, status: models.PasiRequest.INPROGRESS } })
-  res.json({ ok: 1, isMatched: !!pasiRequest })
+  if (pasiRequest) {
+    res.json({ ok: 1, isMatched: !!pasiRequest, pasiRequestId: pasiRequest.id })
+  } else {
+    res.json({ ok: 1, isMatched: !!pasiRequest })
+  }
 })
 
 router.post('/acceptRequest', authFilter, async (req, res, next) => {
