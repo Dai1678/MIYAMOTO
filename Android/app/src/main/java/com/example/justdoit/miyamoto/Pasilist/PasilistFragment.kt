@@ -1,6 +1,7 @@
 package com.example.justdoit.miyamoto.Pasilist
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.activity.PaisluActivity
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.fragment.MainFragment
 import kotlinx.android.synthetic.main.fragment_pasilist.*
@@ -23,6 +25,8 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     var mPasilistAdapter:PasilistAdapter?=null
     var mPasilist:ListView?=null
+
+    var token=""
 
     private var maxPasilistSize = 0
 
@@ -49,12 +53,14 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         mPasilist=view.findViewById<ListView?>(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
+        val sharedPreferences = this.activity!!.getSharedPreferences("Setting", Context.MODE_PRIVATE)
+        token = sharedPreferences.getString("token", "")
+
         //TODO Pasilistデータの中身をサーバーからGET確認
         getPasilistData()
 
-        val pasilistModel = PasilistModel()
         for(i in 0..maxPasilistSize){
-            val sample=PasilistModel(pasilistModel.userId,  pasilistModel.location, pasilistModel.timeLimit, pasilistModel.amount)
+            val sample=PasilistModel(1,  "2号館1階", "2018-04-21 21:30", 3000)
             mPasilistAdapter?.add(sample)
         }
         mPasilist?.adapter=mPasilistAdapter
@@ -71,12 +77,16 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
     override fun onItemClick(adapterView: AdapterView<*>?, view: View, position: Int, id: Long) {
         //TODO PasiluActivityへ遷移
-        //listener.intentPasilu()
+        val intent= Intent(context,PaisluActivity::class.java)
+        intent.putExtra("token",token)
+        val id=mPasilistAdapter?.getItem(position)?.userId
+        intent.putExtra("id",id)
+        startActivity(intent)
     }
 
     private fun getPasilistData(){
         val request = Request.Builder()
-                .url("http://140.82.9.44:3000/match/pasilist")
+                .url("http://140.82.9.44:3000/match/pasilist?token=$token")
                 .get()
                 .build()
 
@@ -100,6 +110,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
                         maxPasilistSize = resultArray.length()
 
                         resultArray?.let{
+                            mPasilistAdapter?.clear()
                             for(i in 0..resultArray.length()) {
                                 val resultJson=resultArray[i] as JSONObject
                                 val pasilistModel = PasilistModel()
@@ -108,6 +119,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
                                 pasilistModel.location = resultJson.getString("address")
                                 pasilistModel.timeLimit = resultJson.getString("timeLimit")
                                 Log.i("id",resultJson.getInt("userid").toString())
+                                mPasilistAdapter?.add(pasilistModel)
                             }
                         }
 

@@ -18,8 +18,10 @@ class PaisluActivity : AppCompatActivity() {
 
         // Fragmentを作成します
         val fragment = PasiluFragment()
-        fragment.arguments?.putInt("id",id)
-        fragment.arguments?.putString("token",token)
+        val args = Bundle()
+        args.putInt("id",id)
+        args.putString("token",token)
+        fragment.arguments=args
         // Fragmentの追加や削除といった変更を行う際は、Transactionを利用します
         val transaction = supportFragmentManager.beginTransaction()
         // 新しく追加を行うのでaddを使用します
