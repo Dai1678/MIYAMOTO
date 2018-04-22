@@ -15,6 +15,7 @@ import com.example.justdoit.miyamoto.Pasilist.PasilistModel
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.MatchingTimerTask
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.WishListActivity
 import com.example.justdoit.miyamoto.adapter.WishListAdapter
 import kotlinx.android.synthetic.main.fragment_wish_list.*
 import okhttp3.*
@@ -61,10 +62,10 @@ class WishListFragment : Fragment() {
         mWishlist = view.findViewById(R.id.list_wish)
         mWishlistAdapter = WishListAdapter(context!!, R.layout.item_wishlist)
 
-        for (i in 0..9) {
-            val sample = WishListModel("カップ麺", i)
-            mWishlistAdapter?.add(sample)
-        }
+//        for (i in 0..9) {
+//            val sample = WishListModel("カップ麺", i)
+//            mWishlistAdapter?.add(sample)
+//        }
         val sample = WishListModel("", 0)
         sample.isBottom = true
         mWishlistAdapter?.add(sample)
@@ -99,16 +100,18 @@ class WishListFragment : Fragment() {
         mWishlist?.setOnItemClickListener { adapterView, view, i, l ->
             if(i==mWishlistAdapter?.count!!-1){
                 val sample = WishListModel("", 1)
+                sample.isBottom=false
                 mWishlistAdapter?.setItem(i,sample)
-                sample.isBottom = true
-                mWishlistAdapter?.add(sample)
+                val addBtn = WishListModel("", 1)
+                addBtn.isBottom = true
+                mWishlistAdapter?.add(addBtn)
                 mWishlistAdapter?.notifyDataSetChanged()
             }
         }
 
         val createBtn = view.findViewById<Button>(R.id.createWish)
         createBtn.setOnClickListener {
-            if (mWishlistAdapter?.count!! >= 1) {
+            if (mWishlistAdapter?.count!! > 1) {
                 val url = "http://140.82.9.44:3000/match/request"
                 // todo ここでpostするデータ付与して
                 val formBody = FormBody.Builder().apply {
@@ -130,7 +133,7 @@ class WishListFragment : Fragment() {
                     val title=mWishlistAdapter?.getItem(i)?.title
                     val cnt=mWishlistAdapter?.getItem(i)?.count
                     if (i == (mWishlistAdapter?.count!! - 2)) {
-                        json+
+                        json=json+
                                 "        {\n" +
                                 "            \"title\": \"$title\",\n" +
                                 "            \"count\": $cnt\n" +
@@ -138,7 +141,7 @@ class WishListFragment : Fragment() {
                                 "    ]\n" +
                                 "}"
                     } else {
-                        json+
+                        json=json+
                                 "        {\n" +
                                 "            \"title\": \"$title\",\n" +
                                 "            \"count\": $cnt\n" +
@@ -161,9 +164,13 @@ class WishListFragment : Fragment() {
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
                         val res = response.body()?.string()
-                        (context as MainActivity).runOnUiThread {
+                        (context as WishListActivity).runOnUiThread {
                             val json: JSONObject
                             try {
+
+                                timer = Timer()
+                                val timerTask = MatchingTimerTask(context!!, token!!, timer!!)
+                                timer?.scheduleAtFixedRate(timerTask, 0, 5000)
 
                             } catch (e: JSONException) {
                                 e.printStackTrace()
@@ -171,10 +178,6 @@ class WishListFragment : Fragment() {
                         }
                     }
                 })
-
-                timer = Timer()
-                val timerTask = MatchingTimerTask(context!!, token!!, timer!!)
-                timer?.scheduleAtFixedRate(timerTask, 0, 5000)
             }
         }
     }

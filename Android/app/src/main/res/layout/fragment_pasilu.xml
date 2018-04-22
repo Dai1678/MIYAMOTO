@@ -111,6 +111,7 @@
                     android:layout_gravity="bottom"
                     android:layout_weight="8"
                     android:textStyle="bold"
+                    android:textSize="25dp"
                     android:background="#ffff00"
                     android:text="パシる" />
 
