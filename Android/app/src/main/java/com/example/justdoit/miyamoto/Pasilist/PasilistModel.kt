@@ -8,11 +8,13 @@ class PasilistModel() {
     var location:String=""
     var timeLimit:String=""
     var amount:Int=0
+    var shoppingListId = 0
 
-    constructor(userId:Int,location:String,timeLimit:String,money:Int):this(){
+    constructor(userId:Int,location:String,timeLimit:String,money:Int, shoppingListId: Int):this(){
         this.userId=userId
         this.location=location
         this.timeLimit=timeLimit
         this.amount =money
+        this.shoppingListId = shoppingListId
     }
 }

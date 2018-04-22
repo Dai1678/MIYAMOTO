@@ -15,12 +15,14 @@ class PaisluActivity : AppCompatActivity() {
 
         val id=intent.getIntExtra("id",0)
         val token=intent.getStringExtra("token")
+        val shoppingListId = intent.getIntExtra("shoppingListId", 0)
 
         // Fragmentを作成します
         val fragment = PasiluFragment()
         val args = Bundle()
         args.putInt("id",id)
         args.putString("token",token)
+        args.putInt("shoppingListId", shoppingListId)
         fragment.arguments=args
         // Fragmentの追加や削除といった変更を行う際は、Transactionを利用します
         val transaction = supportFragmentManager.beginTransaction()
