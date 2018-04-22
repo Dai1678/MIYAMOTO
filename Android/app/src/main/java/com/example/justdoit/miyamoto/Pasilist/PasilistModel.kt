@@ -8,6 +8,7 @@ class PasilistModel() {
     var location:String=""
     var timeLimit:String=""
     var amount:Int=0
+    var 
 
     constructor(userId:Int,location:String,timeLimit:String,money:Int):this(){
         this.userId=userId
