@@ -1,9 +1,11 @@
 package com.example.justdoit.miyamoto.Pasilist
 
 import android.content.Context
+import android.graphics.Color
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import android.widget.ListView
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.activity.PaisluActivity
+import com.example.justdoit.miyamoto.R.id.swipeListLayout
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.fragment.MainFragment
 import kotlinx.android.synthetic.main.fragment_pasilist.*
@@ -21,12 +24,17 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
+class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     var mPasilistAdapter:PasilistAdapter?=null
     var mPasilist:ListView?=null
 
     var token=""
+
+    private var userId = 0
+    private lateinit var location: String
+    private lateinit var timeLimit: String
+    private var amount = 0
 
     private var maxPasilistSize = 0
 
@@ -50,7 +58,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         // Inflate the layout for this fragment
         val view=inflater.inflate(R.layout.fragment_pasilist, container, false)
 
-        mPasilist=view.findViewById<ListView?>(R.id.pasilist)
+        mPasilist=view.findViewById(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
         val sharedPreferences = this.activity!!.getSharedPreferences("Setting", Context.MODE_PRIVATE)
@@ -59,29 +67,40 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
         //TODO Pasilistデータの中身をサーバーからGET確認
         getPasilistData()
 
-        for(i in 0..maxPasilistSize){
-            val sample=PasilistModel(1,  "2号館1階", "2018-04-21 21:30", 3000)
-            mPasilistAdapter?.add(sample)
-        }
-        mPasilist?.adapter=mPasilistAdapter
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        swipeListLayout.setColorSchemeColors(Color.RED,Color.GREEN,Color.BLUE,Color.YELLOW)
+        swipeListLayout.setOnRefreshListener(this)
         pasilist.onItemClickListener = this
     }
 
 
     override fun onItemClick(adapterView: AdapterView<*>?, view: View, position: Int, id: Long) {
+        //TODO パシリストが注文を受諾したら、他の注文は受諾できないようにLOCKする
+
+
         //TODO PasiluActivityへ遷移
         val intent= Intent(context,PaisluActivity::class.java)
         intent.putExtra("token",token)
         val id=mPasilistAdapter?.getItem(position)?.userId
         intent.putExtra("id",id)
         startActivity(intent)
+    }
+
+    //引っ張ったときの処理(非同期処理など)
+    override fun onRefresh() {
+        //mPasilistAdapter?.clear()
+        getPasilistData()
+        mPasilistAdapter?.notifyDataSetChanged()
+
+
+        if (swipeListLayout.isRefreshing){
+            swipeListLayout.isRefreshing = false
+        }
     }
 
     private fun getPasilistData(){
@@ -111,15 +130,20 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener {
 
                         resultArray?.let{
                             mPasilistAdapter?.clear()
-                            for(i in 0..resultArray.length()) {
+                            for(i in 0 until resultArray.length()) {
                                 val resultJson=resultArray[i] as JSONObject
-                                val pasilistModel = PasilistModel()
-                                pasilistModel.userId =resultJson.getInt("userid")
-                                pasilistModel.amount = resultJson.getInt("totalAmount")
-                                pasilistModel.location = resultJson.getString("address")
-                                pasilistModel.timeLimit = resultJson.getString("timeLimit")
-                                Log.i("id",resultJson.getInt("userid").toString())
-                                mPasilistAdapter?.add(pasilistModel)
+                                //val pasilistModel = PasilistModel()
+                                val userId = resultJson.getInt("userId")
+                                val amount = resultJson.getInt("totalAmount")
+                                val location = resultJson.getString("address")
+                                val timeLimit = resultJson.getString("timeLimit")
+                                Log.i("id",resultJson.getInt("userId").toString())
+
+                                for(i in 0 until resultArray.length()){
+                                    val sample=PasilistModel(userId, location, timeLimit, amount)
+                                    mPasilistAdapter?.add(sample)
+                                }
+                                mPasilist?.adapter=mPasilistAdapter
                             }
                         }
 
