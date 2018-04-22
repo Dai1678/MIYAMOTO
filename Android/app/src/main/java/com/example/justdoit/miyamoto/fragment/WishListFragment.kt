@@ -2,6 +2,7 @@ package com.example.justdoit.miyamoto.fragment
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -15,6 +16,7 @@ import com.example.justdoit.miyamoto.Pasilist.PasilistModel
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.MatchingTimerTask
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.activity.WishListActivity
 import com.example.justdoit.miyamoto.adapter.WishListAdapter
 import kotlinx.android.synthetic.main.fragment_wish_list.*
@@ -178,6 +180,14 @@ class WishListFragment : Fragment() {
                         }
                     }
                 })
+
+                val sharedPreferences = activity?.getSharedPreferences("Setting",Context.MODE_PRIVATE)
+                val shardPrefEditor = sharedPreferences?.edit()
+                shardPrefEditor?.putBoolean("mode", true)
+                shardPrefEditor?.apply()
+
+                val intent=Intent(context,TabActivity::class.java)
+                startActivity(intent)
             }
         }
     }

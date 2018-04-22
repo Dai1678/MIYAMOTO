@@ -56,7 +56,7 @@ class MatchingTimerTask(context: Context,val token:String,val timer:Timer) : Tim
                                 timer.cancel()
                                 val sharedPreferences = context?.getSharedPreferences("Setting", Context.MODE_PRIVATE)
                                 val shardPrefEditor = sharedPreferences?.edit()
-                                shardPrefEditor?.putBoolean("mode", true)
+                                shardPrefEditor?.putBoolean("mode", false)
                                 shardPrefEditor?.apply()
 
                                 //マッチング完了画面へ遷移

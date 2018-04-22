@@ -67,4 +67,17 @@
 
     </android.support.v4.view.ViewPager>
 
+    <TextView
+        android:id="@+id/is_matching"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cc000000"
+        android:text="マッチング中..."
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="30dp"/>
+
+
 </LinearLayout>

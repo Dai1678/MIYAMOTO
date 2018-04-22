@@ -16,7 +16,12 @@ class MatchingCompleteActivity : AppCompatActivity() {
     }
 
     fun agree(v: View){
-        val intent=Intent(this,PasilistActivity::class.java)
+        val sharedPreferences = this.getSharedPreferences("Setting",Context.MODE_PRIVATE)
+        val shardPrefEditor = sharedPreferences?.edit()
+        shardPrefEditor?.putBoolean("mode", false)
+        shardPrefEditor?.apply()
+
+        val intent=Intent(this,TabActivity::class.java)
         startActivity(intent)
     }
 }
