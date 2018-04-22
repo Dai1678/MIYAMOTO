@@ -34,6 +34,7 @@ class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
         val matchingV=findViewById<TextView>(R.id.is_matching)
 
         if(mode or notComplete){
+            tabLayout.visibility=View.GONE
             matchingV.visibility= View.VISIBLE
             if(mode){
                 matchingV.text="マッチング中..."
@@ -71,6 +72,7 @@ class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
                                     shardPrefEditor?.apply()
 
                                     matchingV.visibility=View.GONE
+                                    tabLayout.visibility=View.VISIBLE
 
                                 } catch (e: JSONException) {
                                     e.printStackTrace()
@@ -82,6 +84,7 @@ class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
             }
         } else{
             matchingV.visibility=View.GONE
+            tabLayout.visibility=View.VISIBLE
         }
 
         val tabNames = arrayOf("Pasilitator", "Pasilist")

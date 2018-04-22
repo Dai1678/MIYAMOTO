@@ -26,6 +26,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.*
 import okhttp3.RequestBody
+import kotlin.collections.ArrayList
 
 
 class WishListFragment : Fragment() {
@@ -108,6 +109,33 @@ class WishListFragment : Fragment() {
                 addBtn.isBottom = true
                 mWishlistAdapter?.add(addBtn)
                 mWishlistAdapter?.notifyDataSetChanged()
+            }else{
+                val editView = EditText(view.context)
+
+                val addDialog = AlertDialog.Builder(view.context)
+
+                addDialog.setTitle("商品名")
+                addDialog.setMessage("商品名を入力してください")
+                addDialog.setView(editView)
+                // OKボタンの設定
+                addDialog.setPositiveButton("決定", { dialog: DialogInterface, whichButton: Int ->
+                    val item=mWishlistAdapter?.getItem(i)
+                    item?.title=editView.text.toString()
+                    mWishlistAdapter?.setItem(i,item!!)
+                    val array=ArrayList<WishListModel>()
+                    for (pos in 0 until mWishlistAdapter?.count!!){
+                        array.add(mWishlistAdapter?.getItem(pos)!!)
+                    }
+                    mWishlistAdapter?.clear()
+                    for (pos in 0 until array.size){
+                        mWishlistAdapter?.add(array[pos])
+                    }
+                    mWishlist?.adapter=mWishlistAdapter
+                })
+                // キャンセルボタンの設定
+                addDialog.setNegativeButton("キャンセル", { dialog: DialogInterface, whichButton: Int ->
+                })
+                addDialog.show()
             }
         }
 
