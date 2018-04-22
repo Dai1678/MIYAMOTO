@@ -91,7 +91,7 @@ router.get('/shoppingList/:id', authFilter, async (req, res, next) => {
   if (errors) return next(errors)
 
   const result = models.ShoppingList.findById(req.params.id)
-  res.json(Object.assign({ ok: 1 }, result))
+  res.json({ ok: 1, result })
 })
 
 module.exports = router
