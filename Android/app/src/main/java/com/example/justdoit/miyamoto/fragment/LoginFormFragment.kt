@@ -56,9 +56,11 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
 
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
+            var result = false
             launch(UI) {
-                ApiClient.shared.login(strUserAddress, strUserPass).await()
+                result = ApiClient.shared.login(strUserAddress, strUserPass).await()
             }
+            if (!result) return
             val intent = Intent(context, TabActivity::class.java)
             startActivity(intent)
         }else{

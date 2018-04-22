@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.example.justdoit.miyamoto.ApiClient
 import com.example.justdoit.miyamoto.model.WishListModel
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.MatchingTimerTask
@@ -17,6 +18,8 @@ import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.activity.WishListActivity
 import com.example.justdoit.miyamoto.adapter.WishListAdapter
 import kotlinx.android.synthetic.main.fragment_wish_list.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -66,7 +69,7 @@ class WishListFragment : Fragment() {
 //            val sample = WishListModel("カップ麺", i)
 //            mWishlistAdapter?.add(sample)
 //        }
-        val sample = WishListModel("", 0)
+        val sample = WishListModel(1, "hogehoge")
         sample.isBottom = true
         mWishlistAdapter?.add(sample)
 
@@ -99,10 +102,10 @@ class WishListFragment : Fragment() {
 
         mWishlist?.setOnItemClickListener { adapterView, view, i, l ->
             if(i==mWishlistAdapter?.count!!-1){
-                val sample = WishListModel("", 1)
+                val sample = WishListModel(1, "")
                 sample.isBottom=false
                 mWishlistAdapter?.setItem(i,sample)
-                val addBtn = WishListModel("", 1)
+                val addBtn = WishListModel(1, "")
                 addBtn.isBottom = true
                 mWishlistAdapter?.add(addBtn)
                 mWishlistAdapter?.notifyDataSetChanged()
@@ -139,82 +142,31 @@ class WishListFragment : Fragment() {
         val createBtn = view.findViewById<Button>(R.id.createWish)
         createBtn.setOnClickListener {
             if (mWishlistAdapter?.count!! > 1) {
-                val url = "http://140.82.9.44:3000/match/request"
-                // todo ここでpostするデータ付与して
-                val formBody = FormBody.Builder().apply {
-                    add("token", token)
-                    add("timeLimit", timelimit)
-                    add("address", location)
-                    add("totalAmount", totalAmount.toString())
-                    add("shoppingLists[0]", "aa")
-                }.build()
-
-                val JSON = MediaType.parse("application/json; charset=utf-8")
-                var json = "{\n" +
-                        "    \"token\": \"$token\",\n" +
-                        "    \"timeLimit\": \"$timelimit\",\n" +
-                        "    \"address\": \"$location\",\n" +
-                        "    \"totalAmount\": $totalAmount,\n" +
-                        "    \"shoppingLists\": [\n"
-                for (i in 0..(mWishlistAdapter?.count!! - 2)) {
-                    val title=mWishlistAdapter?.getItem(i)?.title
-                    val cnt=mWishlistAdapter?.getItem(i)?.count
-                    if (i == (mWishlistAdapter?.count!! - 2)) {
-                        json=json+
-                                "        {\n" +
-                                "            \"title\": \"$title\",\n" +
-                                "            \"count\": $cnt\n" +
-                                "        }\n" +
-                                "    ]\n" +
-                                "}"
-                    } else {
-                        json=json+
-                                "        {\n" +
-                                "            \"title\": \"$title\",\n" +
-                                "            \"count\": $cnt\n" +
-                                "        }\n"
-                    }
-                }
-                val body = RequestBody.create(JSON, json)
-
-                val request = Request.Builder()
-                        .url(url)       // HTTPアクセス POST送信 テスト確認用ページ
-                        .post(body)
-                        .build()
-
-                val client = OkHttpClient()
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-
-                    }
-
-                    @Throws(IOException::class)
-                    override fun onResponse(call: Call, response: Response) {
-                        val res = response.body()?.string()
-                        (context as WishListActivity).runOnUiThread {
-                            val json: JSONObject
-                            try {
-
-                                timer = Timer()
-                                val timerTask = MatchingTimerTask(context!!, token!!, timer!!)
-                                timer?.scheduleAtFixedRate(timerTask, 0, 5000)
-
-                            } catch (e: JSONException) {
-                                e.printStackTrace()
-                            }
+                var result = false
+                launch(UI) {
+                    val shoppingLists = mutableListOf<WishListModel>().apply {
+                        for (i in 0 until mWishlistAdapter!!.count - 1) {
+                            add(mWishlistAdapter!!.getItem(i)!!)
                         }
                     }
-                })
-
-                val sharedPreferences = activity?.getSharedPreferences("Setting",Context.MODE_PRIVATE)
-                val shardPrefEditor = sharedPreferences?.edit()
-                shardPrefEditor?.putBoolean("mode", true)
-                shardPrefEditor?.apply()
-
-                val intent=Intent(context,TabActivity::class.java)
-                startActivity(intent)
+                    result = ApiClient.shared.postPasiRequest(timelimit!!, location!!, totalAmount, shoppingLists).await()
+                    if (result) setTimmer()
+                }
             }
         }
+    }
+
+    private fun setTimmer() {
+        timer = Timer()
+        val timerTask = MatchingTimerTask(context!!, token!!, timer!!)
+        timer?.scheduleAtFixedRate(timerTask, 0, 5000)
+        val sharedPreferences = activity?.getSharedPreferences("Setting",Context.MODE_PRIVATE)
+        val shardPrefEditor = sharedPreferences?.edit()
+        shardPrefEditor?.putBoolean("mode", true)
+        shardPrefEditor?.apply()
+
+        val intent=Intent(context,TabActivity::class.java)
+        startActivity(intent)
     }
 
 }

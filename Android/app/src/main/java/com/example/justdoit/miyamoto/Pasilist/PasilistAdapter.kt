@@ -51,11 +51,11 @@ class PasilistAdapter(context: Context,resource: Int) :ArrayAdapter<PasilistMode
         val item = mItems[position]
 
         val locationT=view.findViewById<TextView>(R.id.location_pasilist)
-        locationT.text=item.location
+        locationT.text=item.address
         val timelimitT=view.findViewById<TextView>(R.id.timelimit_pasilist)
         timelimitT.text=item.timeLimit
         val amountT=view.findViewById<TextView>(R.id.amount_pasilist)
-        amountT.text=item.amount.toString()
+        amountT.text=item.totalAmount.toString()
 
         val idT=view.findViewById<TextView>(R.id.text_id)
         idT.text=item.userId.toString()

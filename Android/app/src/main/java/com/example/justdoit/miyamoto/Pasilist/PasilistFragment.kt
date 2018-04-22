@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
+import com.example.justdoit.miyamoto.ApiClient
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.activity.PaisluActivity
@@ -20,6 +21,8 @@ import com.example.justdoit.miyamoto.R.id.swipeListLayout
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.fragment.MainFragment
 import kotlinx.android.synthetic.main.fragment_pasilist.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -66,7 +69,12 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
         token = sharedPreferences.getString("token", "")
 
         //TODO Pasilistデータの中身をサーバーからGET確認
-        getPasilistData()
+        launch(UI) {
+            ApiClient.shared.fetchPasiList().await()?.let {
+                it.forEach { mPasilistAdapter?.add(it!!) }
+                mPasilist?.adapter = mPasilistAdapter
+            }
+        }
 
         return view
     }
@@ -96,65 +104,18 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
 
     //引っ張ったときの処理(非同期処理など)
     override fun onRefresh() {
-        getPasilistData()
+        launch(UI) {
+            ApiClient.shared.fetchPasiList().await()?.let {
+                mPasilistAdapter?.clear()
+                it.forEach { mPasilistAdapter?.add(it!!) }
+                mPasilist?.adapter = mPasilistAdapter
+                mPasilistAdapter?.notifyDataSetChanged()
+            }
+        }
 
         if (swipeListLayout.isRefreshing){
             swipeListLayout.isRefreshing = false
         }
-    }
-
-    private fun getPasilistData(){
-        val request = Request.Builder()
-                .url("http://140.82.9.44:3000/match/pasilist?token=$token")
-                .get()
-                .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                Log.i("error","error")
-            }
-
-            @Throws(IOException::class)
-            override fun
-                    onResponse(call: Call, response: Response) {
-                val res = response.body()?.string()
-                (context as AppCompatActivity).runOnUiThread{
-                    val json: JSONObject
-                    try {
-                        json = JSONObject(res)
-
-                        val resultArray=json.getJSONArray("result")
-                        maxPasilistSize = resultArray.length()
-
-                        resultArray?.let{
-                            mPasilistAdapter?.clear()
-                            mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
-                            for(i in 0 until resultArray.length()) {
-                                val resultJson=resultArray[i] as JSONObject
-                                //val pasilistModel = PasilistModel()
-                                val userId = resultJson.getInt("id")
-                                val amount = resultJson.getInt("totalAmount")
-                                val location = resultJson.getString("address")
-                                val timeLimit = resultJson.getString("timeLimit")
-                                val shoppingListId = resultJson.getInt("shoppingListId")
-                                Log.i("id",resultJson.getInt("userId").toString())
-
-                                val sample=PasilistModel(userId, location, timeLimit, amount, shoppingListId)
-                                mPasilistAdapter?.add(sample)
-                                mPasilistAdapter?.notifyDataSetChanged()
-                                mPasilist?.adapter=mPasilistAdapter
-                            }
-                        }
-
-
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        })
     }
 
     interface OnPasilistListener {

@@ -138,7 +138,7 @@ class PasiluFragment : Fragment() {
                             val result: Array<WishListModel?> = arrayOfNulls(maxCount)
                             for (i in 0 until maxCount) {
                                 val obj = it[i] as JSONObject
-                                result[i] = WishListModel(obj.getString("title"), obj.getInt("count"))
+                                result[i] = WishListModel(obj.getInt("id"), obj.getString("title"), obj.getInt("count"))
                             }
                             return@let result
                         }
