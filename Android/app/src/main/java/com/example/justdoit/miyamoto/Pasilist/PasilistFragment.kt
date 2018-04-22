@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -117,7 +118,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
             override fun
                     onResponse(call: Call, response: Response) {
                 val res = response.body()?.string()
-                (context as TabActivity).runOnUiThread{
+                (context as AppCompatActivity).runOnUiThread{
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
