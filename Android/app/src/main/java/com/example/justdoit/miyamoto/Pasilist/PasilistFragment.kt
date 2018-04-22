@@ -93,10 +93,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
 
     //引っ張ったときの処理(非同期処理など)
     override fun onRefresh() {
-        //mPasilistAdapter?.clear()
         getPasilistData()
-        mPasilistAdapter?.notifyDataSetChanged()
-
 
         if (swipeListLayout.isRefreshing){
             swipeListLayout.isRefreshing = false
@@ -140,7 +137,9 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
                                 Log.i("id",resultJson.getInt("userId").toString())
 
                                 val sample=PasilistModel(userId, location, timeLimit, amount)
+                                mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
                                 mPasilistAdapter?.add(sample)
+                                mPasilistAdapter?.notifyDataSetChanged()
                                 mPasilist?.adapter=mPasilistAdapter
                             }
                         }
