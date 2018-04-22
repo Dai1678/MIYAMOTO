@@ -3,13 +3,14 @@ package com.example.justdoit.miyamoto.activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.justdoit.miyamoto.Pasilist.PasilistActivity
 import com.example.justdoit.miyamoto.Pasilist.PasilistFragment
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.Unit.ViewPagerAdapter
 import com.example.justdoit.miyamoto.fragment.MyProfileFragment
 import kotlinx.android.synthetic.main.activity_tab.*
 
-class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener, PasilistFragment.OnPasilistListener {
+class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +28,6 @@ class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener, 
 
     override fun intentWish() {
         val intent = Intent(this, WishListActivity::class.java)
-        startActivity(intent)
-    }
-
-    override fun intentPasilu() {
-        val intent = Intent(this, PaisluActivity::class.java)
         startActivity(intent)
     }
 }
