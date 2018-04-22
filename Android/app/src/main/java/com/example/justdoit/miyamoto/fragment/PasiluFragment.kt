@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.Button
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.TabActivity
 import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -80,6 +82,35 @@ class PasiluFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun fetchShoppingList(shoppingListId: Int) {
+        val request = Request.Builder()
+                .url("http://140.82.9.44:3000/match/shoppingList/$shoppingListId?token=$token")
+                .get()
+                .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                Log.i("error","error")
+            }
+
+            @Throws(IOException::class)
+            override fun
+                    onResponse(call: Call, response: Response) {
+                val res = response.body()?.string()
+                (context as TabActivity).runOnUiThread{
+                    val json: JSONObject
+                    try {
+                        json = JSONObject(res)
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        })
     }
 
 }// Required empty public constructor
