@@ -59,10 +59,13 @@ router.get('/pasiList', async (req, res, next) => {
     attributes: ['id', 'pasiRequestId']
   })
 
+  const result = []
   pasiRequests.forEach(request => {
-    request.shoppingListId = shoppingLists.find(list => list.pasiRequestId === request.id)
+    const tmp = request.get()
+    tmp.shoppingListId = shoppingLists.find(list => list.pasiRequestId === request.id).id
+    result.push(tmp)
   })
-  res.json({ ok: 1, result: pasiRequests })
+  res.json({ ok: 1, result })
 })
 
 router.get('/checkFlag', authFilter, async (req, res, next) => {
