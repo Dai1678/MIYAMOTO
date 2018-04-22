@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.example.justdoit.miyamoto.Pasilist.PasilistActivity
 import com.example.justdoit.miyamoto.Pasilist.PasilistFragment
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.R.id.pager
+import com.example.justdoit.miyamoto.R.id.tabLayout
 import com.example.justdoit.miyamoto.Unit.ViewPagerAdapter
 import com.example.justdoit.miyamoto.fragment.MyProfileFragment
 import kotlinx.android.synthetic.main.activity_tab.*
