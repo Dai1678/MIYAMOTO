@@ -62,7 +62,7 @@ class PasiluFragment : Fragment() {
             // todo ここでpostするデータ付与して
             val formBody = FormBody.Builder()
                     .add("token", token)
-                    .add("id", userId.toString())
+                    .add("pasiRequestId", userId.toString())
                     .build()
 
             val url="http://140.82.9.44:3000/match/acceptRequest"

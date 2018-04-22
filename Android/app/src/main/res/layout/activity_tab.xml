@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -46,6 +46,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
+        android:paddingTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -67,4 +68,16 @@
 
     </android.support.v4.view.ViewPager>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/is_matching"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cc000000"
+        android:text="マッチング中..."
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="30dp"/>
+
+</FrameLayout>

@@ -15,7 +15,7 @@
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="kugateruhisa@gmail.com"
+        android:text="nishimura@gmail.com"
         android:hint="mail"/>
 
     <EditText
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="miyamoto"
+        android:text="nishimura"
         android:hint="pass" />
 
     <Button
