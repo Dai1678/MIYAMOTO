@@ -14,6 +14,10 @@ import com.example.justdoit.miyamoto.R.id.tabLayout
 import com.example.justdoit.miyamoto.Unit.ViewPagerAdapter
 import com.example.justdoit.miyamoto.fragment.MyProfileFragment
 import kotlinx.android.synthetic.main.activity_tab.*
+import okhttp3.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 
 class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
 
@@ -23,13 +27,60 @@ class TabActivity : AppCompatActivity(), MyProfileFragment.OnMyProfileListener {
 
         val sharedPreferences = this.getSharedPreferences("Setting", Context.MODE_PRIVATE)
         val mode = sharedPreferences.getBoolean("mode", false)
+        val notComplete = sharedPreferences.getBoolean("notComplete", false)
+        val token=sharedPreferences.getString("token", "")
+        val pasiRequestId=sharedPreferences.getString("pasiRequestId", "")
 
         val matchingV=findViewById<TextView>(R.id.is_matching)
 
-        if(mode){
+        if(mode or notComplete){
             matchingV.visibility= View.VISIBLE
-        }
-        else{
+            if(mode){
+                matchingV.text="マッチング中..."
+            }
+            else if(notComplete){
+                matchingV.text="決済完了したらタップ"
+                matchingV.setOnClickListener {
+                    // todo ここでpostするデータ付与して
+                    val formBody = FormBody.Builder()
+                            .add("token", token)
+                            .add("pasiRequestId", pasiRequestId)
+                            .build()
+
+                    val url="http://140.82.9.44:3000/match/received"
+                    val request = Request.Builder()
+                            .url(url)       // HTTPアクセス POST送信 テスト確認用ページ
+                            .post(formBody)
+                            .build()
+
+                    val client = OkHttpClient()
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+
+                        }
+
+                        @Throws(IOException::class)
+                        override fun onResponse(call: Call, response: Response) {
+                            val res = response.body()?.string()
+                            runOnUiThread {
+                                try {
+                                    val sharedPreferences = getSharedPreferences("Setting",Context.MODE_PRIVATE)
+                                    val shardPrefEditor = sharedPreferences?.edit()
+                                    shardPrefEditor?.putString("pasiRequestId", "")
+                                    shardPrefEditor?.putBoolean("notComplete", false)
+                                    shardPrefEditor?.apply()
+
+                                    matchingV.visibility=View.GONE
+
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        } else{
             matchingV.visibility=View.GONE
         }
 
