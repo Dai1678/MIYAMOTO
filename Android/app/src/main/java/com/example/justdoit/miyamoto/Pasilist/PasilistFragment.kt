@@ -127,6 +127,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
 
                         resultArray?.let{
                             mPasilistAdapter?.clear()
+                            mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
                             for(i in 0 until resultArray.length()) {
                                 val resultJson=resultArray[i] as JSONObject
                                 //val pasilistModel = PasilistModel()
@@ -137,7 +138,6 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
                                 Log.i("id",resultJson.getInt("userId").toString())
 
                                 val sample=PasilistModel(userId, location, timeLimit, amount)
-                                mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
                                 mPasilistAdapter?.add(sample)
                                 mPasilistAdapter?.notifyDataSetChanged()
                                 mPasilist?.adapter=mPasilistAdapter

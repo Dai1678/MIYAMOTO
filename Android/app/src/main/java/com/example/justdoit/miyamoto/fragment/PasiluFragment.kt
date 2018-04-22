@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +68,7 @@ class PasiluFragment : Fragment() {
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body()?.string()
-                    (context as MainActivity).runOnUiThread {
+                    (context as AppCompatActivity).runOnUiThread {
                         val json: JSONObject
                         try {
                             json = JSONObject(res)
