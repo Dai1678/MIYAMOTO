@@ -12,6 +12,7 @@ import android.widget.Button
 
 import com.example.justdoit.miyamoto.R
 import com.example.justdoit.miyamoto.activity.MainActivity
+import com.example.justdoit.miyamoto.activity.PaisluActivity
 import com.example.justdoit.miyamoto.activity.TabActivity
 import okhttp3.*
 import org.json.JSONException
@@ -101,10 +102,17 @@ class PasiluFragment : Fragment() {
             override fun
                     onResponse(call: Call, response: Response) {
                 val res = response.body()?.string()
-                (context as TabActivity).runOnUiThread{
+                (context as PaisluActivity).runOnUiThread{
                     val json: JSONObject
                     try {
                         json = JSONObject(res)
+                        json.getJSONArray("result")?.let {
+                            val maxCount = it.length()
+                            for (i in 0..maxCount) {
+                                it[i] as JSONObject
+                            }
+                        }
+
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
