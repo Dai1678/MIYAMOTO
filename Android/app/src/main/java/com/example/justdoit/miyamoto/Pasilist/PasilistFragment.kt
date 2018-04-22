@@ -1,8 +1,8 @@
 package com.example.justdoit.miyamoto.Pasilist
 
 import android.content.Context
-import android.graphics.Color
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -58,7 +58,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
         // Inflate the layout for this fragment
         val view=inflater.inflate(R.layout.fragment_pasilist, container, false)
 
-        mPasilist=view.findViewById(R.id.pasilist)
+        mPasilist=view.findViewById<ListView?>(R.id.pasilist)
         mPasilistAdapter=PasilistAdapter(context!!,R.layout.item_pasilist)
 
         val sharedPreferences = this.activity!!.getSharedPreferences("Setting", Context.MODE_PRIVATE)
@@ -93,10 +93,7 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
 
     //引っ張ったときの処理(非同期処理など)
     override fun onRefresh() {
-        //mPasilistAdapter?.clear()
         getPasilistData()
-        mPasilistAdapter?.notifyDataSetChanged()
-
 
         if (swipeListLayout.isRefreshing){
             swipeListLayout.isRefreshing = false
@@ -133,16 +130,16 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
                             for(i in 0 until resultArray.length()) {
                                 val resultJson=resultArray[i] as JSONObject
                                 //val pasilistModel = PasilistModel()
-                                val userId = resultJson.getInt("userId")
+                                val userId = resultJson.getInt("id")
                                 val amount = resultJson.getInt("totalAmount")
                                 val location = resultJson.getString("address")
                                 val timeLimit = resultJson.getString("timeLimit")
                                 Log.i("id",resultJson.getInt("userId").toString())
 
-                                for(i in 0 until resultArray.length()){
-                                    val sample=PasilistModel(userId, location, timeLimit, amount)
-                                    mPasilistAdapter?.add(sample)
-                                }
+                                val sample=PasilistModel(userId, location, timeLimit, amount)
+                                mPasilistAdapter = PasilistAdapter(context!!,R.layout.item_pasilist)
+                                mPasilistAdapter?.add(sample)
+                                mPasilistAdapter?.notifyDataSetChanged()
                                 mPasilist?.adapter=mPasilistAdapter
                             }
                         }
