@@ -26,6 +26,10 @@ class PasilistAdapter(context: Context,resource: Int) :ArrayAdapter<PasilistMode
         mItems.reverse()
     }
 
+    override fun clear() {
+        mItems = ArrayList<PasilistModel>()
+    }
+
     override fun add(item:PasilistModel){
         mItems.add(item)
     }

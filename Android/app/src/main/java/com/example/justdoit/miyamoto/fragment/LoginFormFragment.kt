@@ -15,6 +15,7 @@ import com.example.justdoit.miyamoto.ApiClient
 import com.example.justdoit.miyamoto.Pasilist.PasilistAdapter
 
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.Session
 import com.example.justdoit.miyamoto.Unit.OkHttpSample
 import com.example.justdoit.miyamoto.activity.LoginFormActivity
 import com.example.justdoit.miyamoto.activity.MainActivity
@@ -56,17 +57,24 @@ class LoginFormFragment : Fragment(), View.OnClickListener {
 
         if (strUserAddress != "" || strUserPass != ""){
             //認証作業
-            var result = false
             launch(UI) {
-                result = ApiClient.shared.login(strUserAddress, strUserPass).await()
+                afterLogin(ApiClient.shared.login(strUserAddress, strUserPass).await())
             }
-            if (!result) return
-            val intent = Intent(context, TabActivity::class.java)
-            startActivity(intent)
         }else{
             Snackbar.make(view, "入力してください", Snackbar.LENGTH_SHORT)
                     .setAction("Action",null).show()
         }
+    }
+
+    private fun afterLogin(token: String?) {
+        if (token == null) {
+            Snackbar.make(view!!, "認証に失敗しました。", Snackbar.LENGTH_SHORT)
+                    .setAction("Action",null).show()
+            return
+        }
+        Session.shared.token = token
+        val intent = Intent(context, TabActivity::class.java)
+        startActivity(intent)
     }
 
 }

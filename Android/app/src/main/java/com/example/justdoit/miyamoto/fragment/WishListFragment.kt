@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.widget.*
 import com.example.justdoit.miyamoto.ApiClient
 import com.example.justdoit.miyamoto.model.WishListModel
 import com.example.justdoit.miyamoto.R
+import com.example.justdoit.miyamoto.Session
 import com.example.justdoit.miyamoto.Unit.MatchingTimerTask
 import com.example.justdoit.miyamoto.activity.TabActivity
 import com.example.justdoit.miyamoto.activity.WishListActivity
@@ -150,15 +152,20 @@ class WishListFragment : Fragment() {
                         }
                     }
                     result = ApiClient.shared.postPasiRequest(timelimit!!, location!!, totalAmount, shoppingLists).await()
-                    if (result) setTimmer()
+                    if (result) {
+                        startMatching()
+                    } else {
+                        Snackbar.make(view, "エラーが発生しました...", Snackbar.LENGTH_SHORT)
+                                .setAction("Action",null).show()
+                    }
                 }
             }
         }
     }
 
-    private fun setTimmer() {
+    private fun startMatching() {
         timer = Timer()
-        val timerTask = MatchingTimerTask(context!!, token!!, timer!!)
+        val timerTask = MatchingTimerTask(context!!, Session.shared.token, timer!!)
         timer?.scheduleAtFixedRate(timerTask, 0, 5000)
         val sharedPreferences = activity?.getSharedPreferences("Setting",Context.MODE_PRIVATE)
         val shardPrefEditor = sharedPreferences?.edit()

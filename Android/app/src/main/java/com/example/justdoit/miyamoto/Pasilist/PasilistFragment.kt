@@ -109,7 +109,6 @@ class PasilistFragment : Fragment(), AdapterView.OnItemClickListener, SwipeRefre
                 mPasilistAdapter?.clear()
                 it.forEach { mPasilistAdapter?.add(it!!) }
                 mPasilist?.adapter = mPasilistAdapter
-                mPasilistAdapter?.notifyDataSetChanged()
             }
         }
 
