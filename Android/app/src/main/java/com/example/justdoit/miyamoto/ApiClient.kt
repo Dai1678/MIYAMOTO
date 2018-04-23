@@ -51,7 +51,6 @@ class ApiClient private constructor() {
 
     private fun postWithToken(endPoint: String, postJson: JsonObject): String? {
         val header: HashMap<String, String> = hashMapOf("Content-Type" to "application/json")
-        val hoge = createJsonWithToken(postJson)
         val (_, _, result) = client.post(SERVER_BASE_URL + endPoint).header(header).body(createJsonWithToken(postJson)).responseString()
         result.fold({ data ->
             return data
