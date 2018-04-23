@@ -1,5 +1,6 @@
 package com.example.justdoit.miyamoto
 
+import android.util.Log
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.example.justdoit.miyamoto.Pasilist.PasilistModel
@@ -30,7 +31,8 @@ class ApiClient private constructor() {
             it.forEach {query += "&${it.key}=${it.value}"}
             return@let query
         }
-        return "${SERVER_BASE_URL}$endPoint?token=${Session.shared.token}$paramString"
+        Log.d("tokenInformation", Session.shared.token)
+        return "${SERVER_BASE_URL}$endPoint?token=${Session.shared.token}${if (paramString.isNullOrBlank()) "" else paramString}"
     }
 
     private fun createJsonWithToken(json: JsonObject): String {
@@ -113,6 +115,43 @@ class ApiClient private constructor() {
         }
         postWithToken("/match/request", postJson).let {
             if (it == null) return@async false
+            val json = parser.parse(StringBuilder(it)) as JsonObject
+            return@async json.int("ok") == 1
+        }
+    }
+
+    fun fetchShoppingList(shoppingListId: Int): Deferred<MutableList<WishListModel>?> = async(CommonPool) {
+        getWithToken("/match/shoppingList/$shoppingListId", null)?.let {
+            val json = parser.parse(StringBuilder(it)) as JsonObject
+            return@async mutableListOf<WishListModel>().apply {
+                json.array<JsonObject>("result")?.forEach {
+                    add(WishListModel(
+                            it.int("id")!!,
+                            it.string("title")!!,
+                            it.int("count")!!
+                    ))
+                }
+            }
+        }
+    }
+
+    fun acceptPasiRequest(pasiRequestId: Int): Deferred<Boolean?> = async(CommonPool) {
+        val postJson = JsonObject().apply { put("pasiRequestId", pasiRequestId) }
+        postWithToken("/match/acceptRequest", postJson)?.let {
+            val json = parser.parse(StringBuilder(it)) as JsonObject
+            return@async json.int("ok") == 1
+        }
+    }
+
+    fun checkMatchedFlag(): Deferred<JsonObject?> = async(CommonPool) {
+        getWithToken("/match/checkFlag", null)?.let {
+            return@async parser.parse(StringBuilder(it)) as JsonObject
+        }
+    }
+
+    fun received(pasiRequestId: String): Deferred<Boolean?> = async(CommonPool) {
+        val postJson = JsonObject().apply { put("pasiRequestId", pasiRequestId) }
+        postWithToken("/match/received", postJson)?.let {
             val json = parser.parse(StringBuilder(it)) as JsonObject
             return@async json.int("ok") == 1
         }
